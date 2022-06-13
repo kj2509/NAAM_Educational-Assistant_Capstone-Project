@@ -1,25 +1,25 @@
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import TextField from "@mui/material/TextField";
-import profileImage from "../../images/prof-image.jpg";
+import sampleProfileImage from "../../images/prof-image.jpg";
 import StudentNavbar from "../../components/studentNavbar";
 import Center from "../../components/center";
 import DrowsinessPieChart from "../../components/graphs/drowsinessPieChart";
 import EmotionPieChart from "../../components/graphs/emotionPieChart";
 import VoicePieChart from "../../components/graphs/voicePieChart";
-import { apiGetSessionStatsForStudent } from "../../services/apiService";
+import { apiGetSessionStatsForStudent, apiGetProfilePicUrl } from "../../services/apiService";
 import { useParams } from "react-router-dom";
 
 export default function StudentProfile() {
   const user = useSelector((state) => state.user.userData);
   const [student, setStudent] = useState();
   const { studentId } = useParams();
-
+  const profileImage = apiGetProfilePicUrl(studentId);
 
   useEffect(() => {
     if (user) {
       getStudentStats(user);
-      getProfileImage();
+      // getProfileImage();
     }
   }, []);
 
@@ -34,9 +34,18 @@ export default function StudentProfile() {
     )
   }
 
-  const getProfileImage = () => {
+  // const getProfileImage = () => {
+  //   apiGetCurrentUserProfilePic(user).then(
+  //     (res) => {
+  //       console.log('res', res)
+  //       // setProfileImage(res.data)
+  //     },
+  //     (err) => {
+  //       console.error('Error while fetching profile picture :', err)
+  //     }
+  //   );
+  // }
 
-  }
 
   return (
     <>

@@ -3,8 +3,6 @@ import { useSelector } from "react-redux";
 
 // const BASE_PATH = process.env.BASE_PATH;
 const BASE_PATH = "http://localhost:5000";
-
-const TEST_URL = "/test";
 const REGISTER_URL = "/register";
 const LOGIN_URL = "/login";
 const LOGOUT_URL = "/logout"
@@ -23,10 +21,6 @@ const SESSION_STUDENT_COMPLETE_URL = "/session/student/complete";
 const MARKS_URL = "/marks";
 const STUDENTS_MARKS_URL = "/student/marks";
 
-export function apiTest() {
-  const res = axios.post(BASE_PATH + TEST_URL);
-  return res;
-}
 
 export function apiRegisterNewUser(registrationFormData) {
   const res = axios.post(BASE_PATH + REGISTER_URL,
@@ -65,9 +59,20 @@ export function apiGetStudents() {
   return res;
 }
 
-export function apiGetCurrentUserProfilePic() {
+export function apiGetProfilePicUrl(id) {
+  const url = BASE_PATH + PROFILE_PIC_CURRENT_USER_URL + "/" + id;
+  return url;
+}
+
+export function apiGetCurrentUserProfilePic(user) {
   const url = "/profile_pic";
-  const res = axios.get(BASE_PATH + PROFILE_PIC_CURRENT_USER_URL);
+  const res = axios.get(BASE_PATH + PROFILE_PIC_CURRENT_USER_URL,
+    {
+      auth: {
+        username: user.email,
+        password: user.password
+      }
+    });
   return res;
 }
 

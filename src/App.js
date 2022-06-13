@@ -8,10 +8,12 @@ import StudentProfile from "./pages/StudentProfile";
 import Protected from "./components/protected";
 import { useSelector } from "react-redux";
 import LoginWrapper from "./components/LoginWrapper";
+import Footer from "./components/Footer/Footer";
 
 function App() {
   const isLoggedIn = useSelector((state) => state.user.isLoggedIn);
   return (
+    <>
     <div className="App">
       <BrowserRouter>
         <Routes>
@@ -40,6 +42,8 @@ function App() {
         </Routes>
       </BrowserRouter>
     </div>
+    <Footer />
+    </>
   );
 }
 

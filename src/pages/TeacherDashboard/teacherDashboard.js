@@ -199,7 +199,6 @@ export default function TeacherDashboard() {
 
           </div>
         </main>
-        <Footer />
       </Center>
     </>
   );

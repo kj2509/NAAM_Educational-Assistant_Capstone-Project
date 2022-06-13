@@ -227,14 +227,15 @@ def list_students():
     # return jsonify({"error": "Permission denied!", "status": 403}), 403
 
 
-@api.route("/profile_pic")
-@login_required
-def profile_photo():
+@api.route("/profile_pic", methods=["GET"])
+# @login_required
+@User.auth_required
+def profile_photo(current_user):
     """Redirect to profile photo url of the requested user"""
     return redirect(url_for("api_views.user_profile_photo", user_id=current_user.id))
 
 
-@api.route("/profile_pic/<int:user_id>")
+@api.route("/profile_pic/<int:user_id>", methods=["GET"])
 # @login_required
 def user_profile_photo(user_id: int):
     """Send profile photo if requested user is current user or teacher"""

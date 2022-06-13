@@ -81,7 +81,6 @@ export default function StudentDashboard() {
           </div>
           <VideoStream />
         </main>
-        <Footer />
       </Center>
     </>
   );
