@@ -6,6 +6,7 @@ import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import { useNavigate } from "react-router-dom";
 import { saveAs } from 'file-saver';
 import { apiUpdateStudentMarks } from "../services/apiService";
+import Button from '@mui/material/Button';
 
 const assignment1Max = 10;
 const test1Max = 15;
@@ -20,20 +21,17 @@ const columns = [
     field: "id",
     headerName: "ID",
     width: 30,
-    editable: false
   },
   {
     field: "studentName",
     headerName: "Student",
     width: 110,
-    editable: true,
   },
   {
     field: "attendance",
     headerName: "Attendance",
     type: "number",
     width: 110,
-    editable: true,
   },
   {
     field: "assignment1",
@@ -93,10 +91,11 @@ const columns = [
 
 export default function DataTable() {
   const user = useSelector((state) => state.user.userData);
-  const activeSessionData = useSelector((state) => state.session.sessionDetails);
+  const allStudentsData = useSelector((state) => state.students.values);
   const [rows, setRows] = useState([]);
   const [disable, setDisable] = useState(true);
   const [save, setSave] = useState(false);
+  const [atRiskStudentEmails, setAtRiskStudentEmails] = useState([]);
   const navigate = useNavigate();
   let selectionModel = [];
 
@@ -105,12 +104,14 @@ export default function DataTable() {
   }, [])
 
   const setTableData = () => {
-    const studentsInActiveSession = activeSessionData?.students_list;
     const studentRows = [];
-    if (studentsInActiveSession) {
-      studentsInActiveSession.forEach(student => {
+    const atRiskStudents = [];
+    console.log('allStudentsData', allStudentsData)
+    if (allStudentsData) {
+      allStudentsData.forEach(student => {
         let studentMarkDataObj = {
           id: student.id,
+          attendance: student.stats.attendance || undefined,
           studentName: getFullName(student.first_name, student.last_name),
           assignment1: null,
           assignment2: null,
@@ -123,9 +124,19 @@ export default function DataTable() {
         }
         Object.keys(student.marks).forEach(x => {
           checkAndSetMark(studentMarkDataObj, x, student.marks[x]);
+          if(x == 'predicted_total' && student.marks[x]) {
+            if(student.marks[x] < 60  || student.stats.attendance < 70) {
+              atRiskStudents.push(student.email);
+            }
+          } else if(x == 'predicted_total' && student.stats.attendance) {
+            if(student.stats.attendance < 70) {
+              atRiskStudents.push(student.email);
+            }
+          }
         });
         studentRows.push(studentMarkDataObj);
       });
+      setAtRiskStudentEmails(atRiskStudents);
       setRows(studentRows);
     }
   }
@@ -185,9 +196,20 @@ export default function DataTable() {
     }
   };
 
+  const sendWarningEmail = () => {
+    const studentEmails = atRiskStudentEmails;
+    console.log('atRiskStudentEmails', atRiskStudentEmails)
+    const bccList = 'mailto:?bcc='+ studentEmails.toString();
+    const emailSubject = '&subject=At risk of failing the subject';
+    const emailBody = '&body=Dear student%2C%0D%0A%0D%0AYou are at risk of failing the subject due to low marks or attendance.%0D%0AKindly get in touch with your coordinator.%0D%0A%0D%0AThanks and regards%2C%0D%0A%0D%0A'+ user.first_name;
+    const construct = bccList.concat(emailSubject, emailBody);
+    window.open(construct);
+  }
+
   return (
     <>
       <div className="datatable-wrapper" style={{ height: "84vh", width: "100%" }}>
+      <Button onClick={sendWarningEmail}>Send warning email to students</Button>
         <DataGrid
           rows={rows}
           columns={columns}
@@ -197,7 +219,9 @@ export default function DataTable() {
           onSelectionModelChange={handleSelectionModelChange}
           components={{ Toolbar: GridToolbar }}
         />
+        <div>
         <span>Ctrl + click to view student details</span>
+        </div>
       </div>
     </>
   );

@@ -1,7 +1,7 @@
 import React from 'react';
 import { PieChart, Pie, Sector, Cell, Tooltip, Legend } from 'recharts';
 
-const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042'];
+const COLORS = ['#00C422', '#CC2222'];
 const emojiData = {
   "drowsy": "😴",
   "awake": "🙂"
@@ -53,10 +53,12 @@ export default function DrowsinessPieChart(stats) {
         data={drowsinessData}
         cx="50%"
         cy="50%"
+        startAngle={180}
+        endAngle={0}
         labelLine={false}
         label={renderCustomizedLabel}
         outerRadius={100}
-        innerRadius={70}
+        innerRadius={60}
         fill="#8884d8"
         dataKey="value"
       >

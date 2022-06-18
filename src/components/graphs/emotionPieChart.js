@@ -1,7 +1,7 @@
 import React from 'react';
 import { PieChart, Pie, Sector, Cell, Tooltip, Legend } from 'recharts';
 
-const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042'];
+const COLORS = ['#FA5F57', '#EFFA64', '#FA4BDD', '#32FA7D', '#A53EFA', '#4E54FA', '#32FAF6'];
 const RADIAN = Math.PI / 180;
 const emojiData = {
   "angry": "😡",

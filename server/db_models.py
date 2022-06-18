@@ -2,6 +2,7 @@ import datetime
 from functools import wraps
 import os
 import random
+import statistics
 
 from flask import request, jsonify
 from flask_login import UserMixin
@@ -180,6 +181,21 @@ class User(UserMixin, db.Model):
         }
 
     @property
+    def serialize_stats(self):
+        """For student stats for session view"""
+
+        if self.is_teacher:
+            return self.serialize
+
+        return {
+            "id": self.id,
+            "first_name": self.first_name,
+            "last_name": self.last_name,
+            "email": self.email,
+            # "statistics": [statistics.serialize_stats for statistics in self.student_sessions]
+        }
+
+    @property
     def pfp_filename(self):
         """Profile photo's filename"""
         return f"{self.full_name}-{self.id}.jpg"
@@ -237,8 +253,6 @@ class Session(db.Model):
 
     @property
     def serialize(self):
-
-        # Note: Do we need to pass custom datetime format
         return {
             "id": self.id,
             "user_id": self.user_id,
@@ -246,6 +260,18 @@ class Session(db.Model):
             "end_time": self.end_datetime,
             "is_active": self.is_active,
             "teacher": self.teacher.serialize,
+        }
+
+    @property
+    def serialize_complete(self):
+        # ADD STUDENT INFORMATION
+        return {
+            "id": self.id,
+            "user_id": self.user_id,
+            "start_time": self.start_datetime,
+            "end_time": self.end_datetime,
+            "is_active": self.is_active,
+            "students": [student.serialize_stats for student in self.students]
         }
 
 

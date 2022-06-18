@@ -12,19 +12,36 @@ import {
   apiCreateSession, apiEndSession, apiGetSessions,
   apiStudentsDataForAllSessions,
   apiGetActiveSessionDetails,
-  apiAllStudentsDataForActiveSession
+  apiAllStudentsDataForActiveSession,
+  apiGetEntireSessionForTeacher
 } from "../../services/apiService";
 import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
+import Input from '@mui/material/Input';
+import InputLabel from '@mui/material/InputLabel';
+import Select from '@mui/material/Select';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import ListItemAvatar from '@mui/material/ListItemAvatar';
+import ListItemText from '@mui/material/ListItemText';
+import Avatar from '@mui/material/Avatar';
+import Card from '@mui/material/Card';
+import CardContent from '@mui/material/CardContent';
+import Typography from '@mui/material/Typography';
 import { getConsolidatedStudentEmotions, getConsolidatedStudentDrowsiness } from "../../services/graphDataService";
 import { setActiveSessionId, setActiveSessionDetails } from "../../redux/sessionSlice";
-
+import { setStudentsData } from "../../redux/studentsSlice";
+import PersonIcon from '@mui/icons-material/Person';
+import ReactToPrint from 'react-to-print';
 import "./teacherDashboard.css";
 import Footer from "../../components/Footer/Footer";
 
 export default function TeacherDashboard() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const componentRef = useRef();
   const user = useSelector((state) => state.user.userData);
   const [sessionId, setSessionId] = useState();
   const [sessionStarted, setSessionStarted] = useState();
@@ -35,6 +52,10 @@ export default function TeacherDashboard() {
   const [activeSessionDrowsiness, setActiveSessionDrowsiness] = useState();
   const [allSessionDrowsiness, setAllSessionDrowsiness] = useState();
   const [activeStudents, setActiveStudents] = useState();
+  const [selectedSession, setSelectedSession] = useState();
+  const [selectedSessionStudents, setSelectedSessionStudents] = useState();
+  const [completeTeacherSessions, setCompleteTeacherSessions] = useState();
+  const [completeTeacherSessionsMenu, setCompleteTeacherSessionsMenu] = useState();
 
   useEffect(() => {
     apiGetSessions().then(
@@ -61,6 +82,7 @@ export default function TeacherDashboard() {
 
   useEffect(() => {
     getStudentsDataForAllSessions();
+    getDataForEntireSessionsForTeacher();
     if (sessionStarted && sessionId) {
       getStudentsDataForActiveSession();
     }
@@ -102,11 +124,30 @@ export default function TeacherDashboard() {
     apiStudentsDataForAllSessions(user).then(
       (res) => {
         setAllSessionsData(res.data);
+        dispatch(setStudentsData(res.data));
         dispatch(setActiveSessionDetails(res.data));
         const consolidatedAllSessionEmotion = getConsolidatedStudentEmotions(res.data);
         const consolidatedAllSessionDrowsiness = getConsolidatedStudentDrowsiness(res.data);
         setAllSessionEmotion(consolidatedAllSessionEmotion);
         setAllSessionDrowsiness(consolidatedAllSessionDrowsiness);
+      },
+      (err) => {
+        console.error(err)
+      }
+    );
+  }
+
+  const getDataForEntireSessionsForTeacher = () => {
+    apiGetEntireSessionForTeacher(user).then(
+      (res) => {
+        setCompleteTeacherSessions(res.data);
+        let content = [];
+        res.data.forEach(session => {
+          content.push(
+            <MenuItem key={session.id} value={session.id}>{session.start_time}</MenuItem>
+          )
+        });
+        setCompleteTeacherSessionsMenu(content);
       },
       (err) => {
         console.error(err)
@@ -138,11 +179,20 @@ export default function TeacherDashboard() {
     );
   }
 
+  const handleSessionSelect = (e) => {
+    const selSession = completeTeacherSessions.filter(x => x.id == e.target.value)[0];
+    setSelectedSessionStudents(selSession.students);
+  }
+
   return (
     <>
       <TeacherNavbar title="Teacher's Dashboard" />
       <Center>
-        <main className="dashboard">
+        <ReactToPrint
+          trigger={() => <Button>Print page</Button>}
+          content={() => componentRef.current}
+        />
+        <main className="dashboard"  ref={componentRef}>
           <center>
             <h3 className="hello-title">Welcome, {user.first_name}</h3>
           </center>
@@ -160,11 +210,13 @@ export default function TeacherDashboard() {
                 <div className="graphs-container">
                   {activeSessionEmotion &&
                     <div className="graph-container">
+                      <h3>Emotion</h3>
                       <EmotionPieChart key={1} emotion={activeSessionEmotion} />
                     </div>
                   }
                   {activeSessionDrowsiness &&
                     <div className="graph-container">
+                      <h3>Drowsiness</h3>
                       <DrowsinessPieChart key={2} drowsiness={activeSessionDrowsiness} />
                     </div>
                   }
@@ -173,27 +225,81 @@ export default function TeacherDashboard() {
             }
 
             <div className="td-graph-section">
-              <h2>All Sessions</h2>
-              <div className="graphs-container">
-                <div className="graph-container">
-                  {allSessionEmotion && <EmotionPieChart key={3} emotion={allSessionEmotion} />}
-                </div>
-                <div className="graph-container">
-                  {allSessionDrowsiness && <DrowsinessPieChart key={4} drowsiness={allSessionDrowsiness} />}
-                </div>
-              </div>
+              <h2>Previous Sessions</h2>
+              <FormControl fullWidth>
+                <InputLabel id="demo-simple-select-label">Select session</InputLabel>
+                <Select
+                  labelId="demo-simple-select-label"
+                  id="demo-simple-select"
+                  value={selectedSession}
+                  label="Age"
+                  onChange={(e) => handleSessionSelect(e)}
+                >
+                  {completeTeacherSessionsMenu}
+                </Select>
+              </FormControl>
+              {selectedSessionStudents &&
+                <>
+                  <div className="graphs-container">
+                    <div className="graph-container">
+                      {allSessionEmotion &&<> <h3>Emotion</h3> <EmotionPieChart key={3} emotion={allSessionEmotion} /></>}
+                    </div>
+                    <div className="graph-container">
+                      {allSessionDrowsiness &&<> <h3>Drowsiness</h3> <DrowsinessPieChart key={4} drowsiness={allSessionDrowsiness} /></>}
+                    </div>
+                  </div>
+                  <br></br>
+                  <Card className="student-list">
+                    <CardContent>
+                      <Typography gutterBottom variant="h5" component="div">
+                        Attendance
+                      </Typography>
+                      <List>
+                        {selectedSessionStudents.length > 0 ?
+                          selectedSessionStudents.map(student => {
+                            return (
+                              <>
+                                <ListItem key={student.id}>
+                                  <ListItemAvatar>
+                                    <Avatar>
+                                      <PersonIcon />
+                                    </Avatar>
+                                  </ListItemAvatar>
+                                  <ListItemText primary={student.first_name + " " + student.last_name} />
+                                </ListItem>
+                              </>
+                            )
+                          }) :
+                          <span>No students joined session</span>
+                        }
+                      </List>
+                    </CardContent>
+                  </Card>
+                </>
+              }
             </div>
 
-            <h2>Attendance</h2>
-            <div className="graphs-container">
-              <div className="graph-container">
-                {allSessionsData && <AttendanceBarChart students={activeSessionData} />}
+            <div className="td-graph-section">
+              <h2>Cumulative Sessions</h2>
+              <div className="graphs-container">
+                <div className="graph-container">
+                  {allSessionEmotion && <><h3>Emotion</h3> <EmotionPieChart key={3} emotion={allSessionEmotion} /></>}
+                </div>
+                <div className="graph-container">
+                  {allSessionDrowsiness && <><h3>Drowsiness</h3><DrowsinessPieChart key={4} drowsiness={allSessionDrowsiness} /></>}
+                </div>
               </div>
             </div>
-            <h2>Marks</h2>
+            <br />
             <div className="graphs-container">
               <div className="graph-container">
-                {allSessionsData && <MarksBarChart students={allSessionsData} />}
+                {allSessionsData && <><h3>Attendance</h3><AttendanceBarChart students={allSessionsData} /></>}
+              </div>
+            </div>
+            <br />
+            <div className="graphs-container">
+              <div className="graph-container">
+                {allSessionsData && <><h3>Marks</h3> <MarksBarChart students={allSessionsData} /></>}
               </div>
             </div>
 

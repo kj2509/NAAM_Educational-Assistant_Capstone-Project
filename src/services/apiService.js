@@ -14,6 +14,7 @@ const PROFILE_PIC_URL = "/profile_pic/<int:user_id>"
 const SESSION_CREATE_URL = "/session/create";
 const SESSION_END_URL = "/session/end";
 const SESSION_LIST_URL = "/session/list";
+const SESSION_COMPLETE = "/session/complete";
 const SESSION_URL = "/session";
 const SESSION_JOIN_URL = "/join";
 const SESSION_STUDENT_ACTIVE_SESSION_URL = "/session/student/active-session";
@@ -107,6 +108,17 @@ export function apiEndSession(user) {
 
 export function apiGetSessions() {
   const res = axios.get(BASE_PATH + SESSION_LIST_URL);
+  return res;
+}
+
+export function apiGetEntireSessionForTeacher(user) {
+  const res = axios.get(BASE_PATH + SESSION_COMPLETE,
+    {
+      auth: {
+        username: user.email,
+        password: user.password
+      }
+    });
   return res;
 }
 

@@ -21,3 +21,9 @@
   border-radius: 10px;
   margin-right: 20px;
 }
+
+.student-list {
+
+  display: flex;
+  flex-direction: column;
+}

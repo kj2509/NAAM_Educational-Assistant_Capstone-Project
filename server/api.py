@@ -330,6 +330,22 @@ def list_active_session():
     return jsonify(data)
 
 
+@api.route("/session/complete", methods=["GET"])
+# @login_required
+@User.auth_required
+def list_all_session(current_user):
+    """List all all sessions"""
+    all_sessions = Session.query.filter(
+        Session.start_datetime != None,
+        Session.user_id == current_user.id
+    )
+    data = []
+    for session in all_sessions:
+        data.append(session.serialize_complete)
+
+    return jsonify(data)
+
+
 @api.route("/session", methods=["GET"])
 @login_required
 def current_session():
