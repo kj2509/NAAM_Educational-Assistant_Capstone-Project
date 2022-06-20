@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # Getting Started with Project
 
 **Run the server first** and client later to see the project running in it's full glory.
@@ -40,9 +39,3 @@ To start running the server, run the cmd:
 
 This will create a docker container with rn-server image running the server at **port 5000**
 Access the local server at the url [http://localhost:5000/predict](http://localhost:5000/predict) .
-=======
-# NAAM---Educational-Assistant-Capstone-Project-
-
-
-This a final c IT capstone project entitled "Na'am". We prepose an artificial intelligence powered learning monitoring and analytical system. The purpose of this project is to extract significant information in order to comprehend a student’s emotions while in an E-learning environment, as well as to decrease the time and inaccuracy.
->>>>>>> 5177cefc2c60b278d69b212822ac712d0c5b758a

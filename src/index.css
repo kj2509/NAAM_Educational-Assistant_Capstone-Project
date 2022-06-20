@@ -344,3 +344,16 @@ img.profile-image {
   display: inline;
   margin: 2px;
 }
+
+.graph-image-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+
+.graph-legend-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}

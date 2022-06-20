@@ -27,3 +27,8 @@
   display: flex;
   flex-direction: column;
 }
+
+img {
+  width: 40px;
+  object-fit: cover;
+}

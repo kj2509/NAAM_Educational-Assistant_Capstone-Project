@@ -156,11 +156,15 @@ export default function StudentProfile() {
                 <div className="profile-graphs-section">
                   <div className="profile-graph-section">
                     <h3>Emotion</h3>
-                    <EmotionPieChart emotion={student?.stats.emotions} />
+                    <div className="graph-image-container">
+                      <EmotionPieChart emotion={student?.stats.emotions} />
+                    </div>
                   </div>
                   <div className="profile-graph-section">
                     <h3>Drowsiness</h3>
-                    <DrowsinessPieChart drowsiness={student?.stats.drowsiness} />
+                    <div className="graph-image-container">
+                      <DrowsinessPieChart drowsiness={student?.stats.drowsiness} />
+                    </div>
                   </div>
                 </div>
                 <br></br>

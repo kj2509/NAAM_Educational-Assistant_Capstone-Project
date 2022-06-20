@@ -13,7 +13,8 @@ import {
   apiStudentsDataForAllSessions,
   apiGetActiveSessionDetails,
   apiAllStudentsDataForActiveSession,
-  apiGetEntireSessionForTeacher
+  apiGetEntireSessionForTeacher,
+  apiGetProfilePicUrl
 } from "../../services/apiService";
 import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
@@ -211,16 +212,48 @@ export default function TeacherDashboard() {
                   {activeSessionEmotion &&
                     <div className="graph-container">
                       <h3>Emotion</h3>
-                      <EmotionPieChart key={1} emotion={activeSessionEmotion} />
+                      <div className="graph-image-container">
+                        <EmotionPieChart key={1} emotion={activeSessionEmotion} />
+                      </div>
                     </div>
                   }
                   {activeSessionDrowsiness &&
                     <div className="graph-container">
                       <h3>Drowsiness</h3>
-                      <DrowsinessPieChart key={2} drowsiness={activeSessionDrowsiness} />
+                      <div className="graph-image-container">
+                        <DrowsinessPieChart key={2} drowsiness={activeSessionDrowsiness} />
+                      </div>
                     </div>
                   }
                 </div>
+                <br></br>
+                  <Card className="student-list">
+                    <CardContent>
+                      <Typography gutterBottom variant="h5" component="div">
+                        Attendance
+                      </Typography>
+                      <List>
+                        {activeStudents?.length > 0 ?
+                          activeStudents.map(student => {
+                            return (
+                              <>
+                                <ListItem key={student.id}>
+                                  <ListItemAvatar>
+                                    <Avatar>
+                                      {/* <PersonIcon /> */}
+                                      <img src={apiGetProfilePicUrl(student.id)}/>
+                                    </Avatar>
+                                  </ListItemAvatar>
+                                  <ListItemText primary={student.first_name + " " + student.last_name} />
+                                </ListItem>
+                              </>
+                            )
+                          }) :
+                          <span>No students joined session</span>
+                        }
+                      </List>
+                    </CardContent>
+                  </Card>
               </div>
             }
 
@@ -242,10 +275,10 @@ export default function TeacherDashboard() {
                 <>
                   <div className="graphs-container">
                     <div className="graph-container">
-                      {allSessionEmotion &&<> <h3>Emotion</h3> <EmotionPieChart key={3} emotion={allSessionEmotion} /></>}
+                      {allSessionEmotion &&<> <h3>Emotion</h3> <div className="graph-image-container"><EmotionPieChart key={3} emotion={allSessionEmotion} /></div></>}
                     </div>
                     <div className="graph-container">
-                      {allSessionDrowsiness &&<> <h3>Drowsiness</h3> <DrowsinessPieChart key={4} drowsiness={allSessionDrowsiness} /></>}
+                      {allSessionDrowsiness &&<> <h3>Drowsiness</h3> <div className="graph-image-container"><DrowsinessPieChart key={4} drowsiness={allSessionDrowsiness} /></div></>}
                     </div>
                   </div>
                   <br></br>
@@ -262,7 +295,8 @@ export default function TeacherDashboard() {
                                 <ListItem key={student.id}>
                                   <ListItemAvatar>
                                     <Avatar>
-                                      <PersonIcon />
+                                      {/* <PersonIcon /> */}
+                                      <img src={apiGetProfilePicUrl(student.id)}/>
                                     </Avatar>
                                   </ListItemAvatar>
                                   <ListItemText primary={student.first_name + " " + student.last_name} />
@@ -283,10 +317,10 @@ export default function TeacherDashboard() {
               <h2>Cumulative Sessions</h2>
               <div className="graphs-container">
                 <div className="graph-container">
-                  {allSessionEmotion && <><h3>Emotion</h3> <EmotionPieChart key={3} emotion={allSessionEmotion} /></>}
+                  {allSessionEmotion && <><h3>Emotion</h3> <div className="graph-image-container"><EmotionPieChart key={3} emotion={allSessionEmotion} /></div></>}
                 </div>
                 <div className="graph-container">
-                  {allSessionDrowsiness && <><h3>Drowsiness</h3><DrowsinessPieChart key={4} drowsiness={allSessionDrowsiness} /></>}
+                  {allSessionDrowsiness && <><h3>Drowsiness</h3><div className="graph-image-container"><DrowsinessPieChart key={4} drowsiness={allSessionDrowsiness} /></div></>}
                 </div>
               </div>
             </div>
