@@ -145,7 +145,7 @@ export default function TeacherDashboard() {
         let content = [];
         res.data.forEach(session => {
           content.push(
-            <MenuItem key={session.id} value={session.id}>{session.start_time}</MenuItem>
+            <MenuItem key={`men-${session.id}`} value={session.id}>{session.start_time}</MenuItem>
           )
         });
         setCompleteTeacherSessionsMenu(content);
@@ -213,7 +213,7 @@ export default function TeacherDashboard() {
                     <div className="graph-container">
                       <h3>Emotion</h3>
                       <div className="graph-image-container">
-                        <EmotionPieChart key={1} emotion={activeSessionEmotion} />
+                        <EmotionPieChart emotion={activeSessionEmotion} />
                       </div>
                     </div>
                   }
@@ -221,7 +221,7 @@ export default function TeacherDashboard() {
                     <div className="graph-container">
                       <h3>Drowsiness</h3>
                       <div className="graph-image-container">
-                        <DrowsinessPieChart key={2} drowsiness={activeSessionDrowsiness} />
+                        <DrowsinessPieChart drowsiness={activeSessionDrowsiness} />
                       </div>
                     </div>
                   }
@@ -237,9 +237,9 @@ export default function TeacherDashboard() {
                           activeStudents.map(student => {
                             return (
                               <>
-                                <ListItem key={student.id}>
-                                  <ListItemAvatar>
-                                    <Avatar>
+                                <ListItem key={`act-${student.id}`}>
+                                  <ListItemAvatar key={`lsavt-${student.id}`}>
+                                    <Avatar key={`avt-${student.id}`}>
                                       {/* <PersonIcon /> */}
                                       <img src={apiGetProfilePicUrl(student.id)}/>
                                     </Avatar>
@@ -275,10 +275,10 @@ export default function TeacherDashboard() {
                 <>
                   <div className="graphs-container">
                     <div className="graph-container">
-                      {allSessionEmotion &&<> <h3>Emotion</h3> <div className="graph-image-container"><EmotionPieChart key={3} emotion={allSessionEmotion} /></div></>}
+                      {allSessionEmotion &&<> <h3>Emotion</h3> <div className="graph-image-container"><EmotionPieChart emotion={allSessionEmotion} /></div></>}
                     </div>
                     <div className="graph-container">
-                      {allSessionDrowsiness &&<> <h3>Drowsiness</h3> <div className="graph-image-container"><DrowsinessPieChart key={4} drowsiness={allSessionDrowsiness} /></div></>}
+                      {allSessionDrowsiness &&<> <h3>Drowsiness</h3> <div className="graph-image-container"><DrowsinessPieChart drowsiness={allSessionDrowsiness} /></div></>}
                     </div>
                   </div>
                   <br></br>
@@ -292,9 +292,9 @@ export default function TeacherDashboard() {
                           selectedSessionStudents.map(student => {
                             return (
                               <>
-                                <ListItem key={student.id}>
-                                  <ListItemAvatar>
-                                    <Avatar>
+                                <ListItem key={`prev${student.id}`}>
+                                  <ListItemAvatar key={`prev-ls${student.id}`}>
+                                    <Avatar key={`prev-avt${student.id}`}>
                                       {/* <PersonIcon /> */}
                                       <img src={apiGetProfilePicUrl(student.id)}/>
                                     </Avatar>
@@ -317,10 +317,10 @@ export default function TeacherDashboard() {
               <h2>Cumulative Sessions</h2>
               <div className="graphs-container">
                 <div className="graph-container">
-                  {allSessionEmotion && <><h3>Emotion</h3> <div className="graph-image-container"><EmotionPieChart key={3} emotion={allSessionEmotion} /></div></>}
+                  {allSessionEmotion && <><h3>Emotion</h3> <div className="graph-image-container"><EmotionPieChart emotion={allSessionEmotion} /></div></>}
                 </div>
                 <div className="graph-container">
-                  {allSessionDrowsiness && <><h3>Drowsiness</h3><div className="graph-image-container"><DrowsinessPieChart key={4} drowsiness={allSessionDrowsiness} /></div></>}
+                  {allSessionDrowsiness && <><h3>Drowsiness</h3><div className="graph-image-container"><DrowsinessPieChart drowsiness={allSessionDrowsiness} /></div></>}
                 </div>
               </div>
             </div>

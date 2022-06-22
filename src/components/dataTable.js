@@ -31,7 +31,7 @@ const columns = [
     field: "attendance",
     headerName: "Attendance",
     type: "number",
-    width: 110,
+    width: 90,
   },
   {
     field: "assignment1",
@@ -48,7 +48,7 @@ const columns = [
     editable: true,
   },
   {
-    field: "midterm",
+    field: "mid_term",
     headerName: "Midterm (" + midtermMax + ")",
     type: "number",
     width: 110,
@@ -117,7 +117,7 @@ export default function DataTable() {
           assignment2: null,
           test1: null,
           test2: null,
-          midterm: null,
+          mid_term: null,
           final: null,
           total: null,
           predicted_total: null
@@ -166,7 +166,7 @@ export default function DataTable() {
           assignment2: updatedMarks.assignment2,
           test1: updatedMarks.test1,
           test2: updatedMarks.test2,
-          midterm: updatedMarks.midterm,
+          mid_term: updatedMarks.mid_term,
           final: updatedMarks.final,
           total: updatedMarks.total,
           predicted_total: updatedMarks.predicted_total

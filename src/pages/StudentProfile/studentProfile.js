@@ -31,12 +31,16 @@ export default function StudentProfile() {
       (res) => {
         setStudent(res.data);
         let emotionMax = 0;
-        Object.keys(res.data.stats.emotions).forEach(x => {
-          if(res.data.stats.emotions[x] > emotionMax) {
-            emotionMax = res.data.stats.emotions[x];
-            setOverallStudentEmotion(x);
+        if(res.data.stats){
+          if(res.data.stats.emotion) {
+            Object.keys(res.data.stats.emotions).forEach(x => {
+              if(res.data.stats.emotions[x] > emotionMax) {
+                emotionMax = res.data.stats.emotions[x];
+                setOverallStudentEmotion(x);
+              }
+            });   
           }
-        });
+        }
       },
       (err) => {
         console.error(err);
@@ -96,56 +100,56 @@ export default function StudentProfile() {
                 <TextField
                   className="mark-input"
                   variant="outlined"
-                  value={student?.marks.assignment1}
+                  value={student?.marks.assignment1 ?? ''}
                   label="Assignment 1"
                   disabled={!student?.is_teacher}
                 />
                 <TextField
                   className="mark-input"
                   variant="outlined"
-                  value={student?.marks.assignment2}
+                  value={student?.marks.assignment2 ?? ''}
                   label="Assignment 2"
                   disabled={!student?.is_teacher}
                 />
                 <TextField
                   className="mark-input"
                   variant="outlined"
-                  value={student?.marks.test1}
+                  value={student?.marks.test1 ?? ''}
                   label="Test 1"
                   disabled={!student?.is_teacher}
                 />
                 <TextField
                   className="mark-input"
                   variant="outlined"
-                  value={student?.marks.test2}
+                  value={student?.marks.test2 ?? ''}
                   label="Test 2"
                   disabled={!student?.is_teacher}
                 />
                 <TextField
                   className="mark-input"
                   variant="outlined"
-                  value={student?.marks.midterm}
+                  value={student?.marks.midterm ?? ''}
                   label="Mid-Term"
                   disabled={!student?.is_teacher}
                 />
                 <TextField
                   className="mark-input"
                   variant="outlined"
-                  value={student?.marks.final}
+                  value={student?.marks.final ?? ''}
                   label="Final"
                   disabled={!student?.is_teacher}
                 />
                 <TextField
                   className="mark-input"
                   variant="outlined"
-                  value={student?.marks.total}
+                  value={student?.marks.total ?? ''}
                   label="Total"
                   disabled
                 />
                 <TextField
                   className="mark-input"
                   variant="outlined"
-                  value={student?.marks.predicted_total}
+                  value={student?.marks.predicted_total ?? ''}
                   label="Predicted"
                   disabled
                 />
